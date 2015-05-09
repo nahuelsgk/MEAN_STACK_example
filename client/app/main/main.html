@@ -1,0 +1,16 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+ 
+<div class="container">
+ 
+  <form class="comment-form" ng-submit="addComment()" name="commentForm">
+    <input type="text" class="form-control" ng-model="newComment" rows="1" placeholder="Enter a new comment" required></textarea>
+    <input class="btn btn-primary" type="submit" ng-disabled="commentForm.$invalid" value="Post">
+  </form>
+ 
+  <ul class="comment-list">
+    <li ng-repeat="comment in comments">
+      <header>{{ comment.author.name }}</header>
+      <p>{{ comment.content }}</p>
+    </li>
+  </ul>
+</div>
