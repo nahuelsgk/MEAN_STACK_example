@@ -8,5 +8,5 @@ module.exports = {
     uri: 'mongodb://localhost/qumram-dev'
   },
 
-  seedDB: true
+  seedDB: false
 };

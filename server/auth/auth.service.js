@@ -1,12 +1,12 @@
 'use strict';
 
-var mongoose = require('mongoose');
-var passport = require('passport');
-var config = require('../config/environment');
-var jwt = require('jsonwebtoken');
-var expressJwt = require('express-jwt');
-var compose = require('composable-middleware');
-var User = require('../api/user/user.model');
+var mongoose    = require('mongoose');
+var passport    = require('passport');
+var config      = require('../config/environment');
+var jwt         = require('jsonwebtoken');
+var expressJwt  = require('express-jwt');
+var compose     = require('composable-middleware');
+var User        = require('../api/user/user.model');
 var validateJwt = expressJwt({ secret: config.secrets.session });
 
 /**
@@ -17,11 +17,19 @@ function isAuthenticated() {
   return compose()
     // Validate jwt
     .use(function(req, res, next) {
-      // allow access_token to be passed through query parameter as well
-      if(req.query && req.query.hasOwnProperty('access_token')) {
-        req.headers.authorization = 'Bearer ' + req.query.access_token;
-      }
-      validateJwt(req, res, next);
+	      console.log("SERVER: Starting auth....");
+	      // allow access_token to be passed through query parameter as well
+	      if(req.query && req.query.hasOwnProperty('access_token')) {
+	    	console.log("SERVER: Request have access token...");
+	        req.headers.authorization = 'Bearer ' + req.query.access_token;
+	      }
+	      if (req.originalUrl == '/api/comments')
+	      {
+	    	console.log("SERVER: Try to posting a comment....");
+	    	req._tryToPost = true;
+	    	res._tryToPost = true;
+	      }
+	      validateJwt(req, res, next);
     })
     // Attach user to request
     .use(function(req, res, next) {
@@ -30,6 +38,7 @@ function isAuthenticated() {
         if (!user) return res.send(401);
 
         req.user = user;
+        console.log("SERVER: Attaching user to request");
         next();
       });
     });
